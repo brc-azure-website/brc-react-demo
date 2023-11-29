@@ -1,13 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { CssBaseline } from '@mui/material';
+import { ThemeProvider } from '@emotion/react';
+import { createTheme } from '@mui/material/styles';
+
+const theme = createTheme({
+  typography: {
+    fontFamily: 'Hanken Grotesk, sans-serif', 
+  },
+  shadows: {
+    1: '0 1px 2px rgba(56, 65, 74, 0.15)'
+  }
+});
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <App />
+    </ThemeProvider>
   </React.StrictMode>
 );
 
