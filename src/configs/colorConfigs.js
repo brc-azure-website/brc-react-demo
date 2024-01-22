@@ -1,21 +1,10 @@
-import { colors } from "@mui/material";
-
 const colorConfigs = {
-    text: {
-        basic: '#495057',
-        secondary: '#878a99'
-    },
-    sidebar: {
-        bg: "#405189",
-        color: "#eeeeee",
-        hoverBg: "#1e293a",
-        activeBg: "#1e253a"
-    },
-    topbar: {
-        bg: "#fff",
-        color: "#000"
-    },
-    mainBg: "#f3f3f9"
+  green: {
+    main: '#739072',
+    light: '#86A789',
+    dark: '#4F6F52',
+    lighter: '#D2E3C8',
+  }
 }
 
 export default colorConfigs;
