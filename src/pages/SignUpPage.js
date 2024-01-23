@@ -12,13 +12,14 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Topbar from '../components/Topbar';
 import colorConfigs from '../configs/colorConfigs';
+import axios from 'axios';
 
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
+      <Link color="inherit" href="http://localhost:3000/">
+        ART_Space
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -27,13 +28,23 @@ function Copyright(props) {
 }
 
 export default function SignUp() {
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+
+    if (data.get('password1') != data.get('password2')) {
+      alert("Passwords are not matching")
+      return;
+    }
+    
+    const payload = {
       email: data.get('email'),
-      password: data.get('password'),
-    });
+      password: data.get('password1'),
+    }
+
+    await axios.post('http://localhost:8080/api/v1/auth/register', payload)
+      .then((value) => {document.cookie = `art_space_signing_jwt_token=${value.data}; path=/;`})
+      .catch(() => {alert("Server failed to respond")})
   };
 
   return (
@@ -74,10 +85,10 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  name="password"
+                  name="password1"
                   label="Password"
                   type="password"
-                  id="password"
+                  id="password1"
                   autoComplete="new-password"
                   color='success'
                 />
@@ -86,18 +97,12 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  name="password"
+                  name="password2"
                   label="Confirm password"
                   type="password"
-                  id="password"
+                  id="password2"
                   autoComplete="new-password"
                   color='success'
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="success" />}
-                  label="I want my data to be send to the chinese government."
                 />
               </Grid>
             </Grid>
@@ -112,7 +117,7 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/login" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>

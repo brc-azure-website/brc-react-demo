@@ -12,13 +12,14 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import colorConfigs from '../configs/colorConfigs';
 import Topbar from '../components/Topbar';
+import axios from 'axios';
 
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
+      <Link color="inherit" href="http://localhost:3000/">
+        ART_Space
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -26,14 +27,20 @@ function Copyright(props) {
   );
 }
 
-export default function SignIn() {
-  const handleSubmit = (event) => {
+const SignIn = () => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+
+    const payload = {
       email: data.get('email'),
       password: data.get('password'),
-    });
+    }
+
+    await axios.post('http://localhost:8080/api/v1/auth/authenticate', payload)
+      .then((value) => {document.cookie = `art_space_signing_jwt_token=${value.data}; path=/;`})
+      .catch(() => {alert("Server failed to respond")})
+    
   };
 
   return (
@@ -80,10 +87,6 @@ export default function SignIn() {
               autoComplete="current-password"
               color='success'
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="success" />}
-              label="Remember me"
-            />
             <Button
               type="submit"
               fullWidth
@@ -93,14 +96,9 @@ export default function SignIn() {
             >
               Sign In
             </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
+            <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/register" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
@@ -112,3 +110,5 @@ export default function SignIn() {
     </div>
   );
 }
+
+export default SignIn;
