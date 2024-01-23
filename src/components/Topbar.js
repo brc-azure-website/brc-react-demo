@@ -12,6 +12,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import colorConfigs from "../configs/colorConfigs";
 import { Link } from 'react-router-dom';
+import { Button } from '@mui/material';
+import { Add } from '@mui/icons-material';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -82,8 +84,9 @@ const Topbar = () => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMenuClose} component={Link} to='/profile'>Your Profile</MenuItem>
+      <MenuItem onClick={handleMenuClose} component={Link} to='/liked'>Liked Images</MenuItem>
+      <MenuItem onClick={handleMenuClose} component={Link} to='/liked'>Log out</MenuItem>
     </Menu>
   );
 
@@ -107,13 +110,23 @@ const Topbar = () => {
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
+              style={{ width: '40vw' }}
             />
           </Search>
+          <Button 
+              startIcon={<Add />}
+              variant="text" 
+              color='inherit' 
+              size='large'
+              href='/upload'
+            >
+            Upload Image
+          </Button>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton
               size="large"
-              edge="end"
+              edge="start"
               aria-label="account of current user"
               aria-controls={menuId}
               aria-haspopup="true"

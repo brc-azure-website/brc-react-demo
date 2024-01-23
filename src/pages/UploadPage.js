@@ -1,31 +1,30 @@
-import * as React from 'react';
+import React from 'react'
+import Topbar from "../components/Topbar";
+import colorConfigs from '../configs/colorConfigs';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import colorConfigs from '../configs/colorConfigs';
-import Topbar from '../components/Topbar';
 import axios from 'axios';
+import { CloudUploadOutlined, Send, UploadFile } from '@mui/icons-material';
+import styled from '@emotion/styled';
 
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="http://localhost:3000/">
-        ART_Space
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
 
-const SignIn = () => {
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
+
+const UploadPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -57,20 +56,20 @@ const SignIn = () => {
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: '#2e7d32' }}>
-            <LockOutlinedIcon />
+            <CloudUploadOutlined />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Upload your image
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              id="title"
+              label="Title"
+              name="title"
+              autoComplete="title"
               autoFocus
               color='success'
             />
@@ -78,35 +77,39 @@ const SignIn = () => {
               margin="normal"
               required
               fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
+              id="description"
+              label="Description"
+              name="description"
+              autoComplete="description"
               color='success'
+              multiline
+              rows={5}
             />
+            <Button 
+              component="label" 
+              variant="contained" 
+              fullWidth
+              color='secondary'
+              startIcon={<UploadFile />}
+            >
+              Upload Image
+              <VisuallyHiddenInput type="file" />
+            </Button>
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
               color='success'
+              endIcon={<Send />}
             >
-              Sign In
+              Send
             </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="/register" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </div>
   );
 }
 
-export default SignIn;
+export default UploadPage
