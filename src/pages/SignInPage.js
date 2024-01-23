@@ -11,6 +11,7 @@ import Container from '@mui/material/Container';
 import colorConfigs from '../configs/colorConfigs';
 import Topbar from '../components/Topbar';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function Copyright(props) {
   return (
@@ -26,6 +27,7 @@ function Copyright(props) {
 }
 
 const SignIn = () => {
+  const navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -36,7 +38,10 @@ const SignIn = () => {
     }
 
     await axios.post('http://localhost:8080/api/v1/auth/authenticate', payload)
-      .then((value) => {document.cookie = `art_space_signing_jwt_token=${value.data}; path=/;`})
+      .then((value) => {
+        document.cookie = `art_space_signing_jwt_token=${value.data}; path=/;`
+        navigate("/")
+      })
       .catch(() => {alert("Server failed to respond")})
     
   };

@@ -9,33 +9,25 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import axios from 'axios';
 import { CloudUploadOutlined, Send, UploadFile } from '@mui/icons-material';
-import styled from '@emotion/styled';
-
-
-const VisuallyHiddenInput = styled('input')({
-  clip: 'rect(0 0 0 0)',
-  clipPath: 'inset(50%)',
-  height: 1,
-  overflow: 'hidden',
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  whiteSpace: 'nowrap',
-  width: 1,
-});
+import { useNavigate } from 'react-router-dom';
 
 const UploadPage = () => {
+  const navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
     const payload = {
-      email: data.get('email'),
-      password: data.get('password'),
+      title: data.get('title'),
+      description: data.get('description'),
+      image: data.get('image'),
     }
-
-    await axios.post('http://localhost:8080/api/v1/auth/authenticate', payload)
-      .then((value) => {document.cookie = `art_space_signing_jwt_token=${value.data}; path=/;`})
+    console.log(payload)
+    await axios.post('http://localhost:8080/api/v1/image/create', payload)
+      .then(() => {
+        alert("Your image was uploaded successfully")
+        navigate("/")
+      })
       .catch(() => {alert("Server failed to respond")})
     
   };
@@ -93,7 +85,7 @@ const UploadPage = () => {
               startIcon={<UploadFile />}
             >
               Upload Image
-              <VisuallyHiddenInput type="file" />
+              <input type="file" hidden id='image'/>
             </Button>
             <Button
               type="submit"
