@@ -12,6 +12,7 @@ import Topbar from '../components/Topbar';
 import colorConfigs from '../configs/colorConfigs';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 function Copyright(props) {
   return (
@@ -44,8 +45,9 @@ const SignUp = () => {
 
     await axios.post('http://localhost:8080/api/v1/auth/register', payload)
       .then((value) => {
-        document.cookie = `art_space_signing_jwt_token=${value.data}; path=/;`
-        navigate("/")
+        console.log(value.data.token)
+        Cookies.set("art_space_signing_jwt_token", value.data.token, { expires: 1 });
+        navigate("/");
       })
       .catch(() => {alert("Server failed to respond")})
   };

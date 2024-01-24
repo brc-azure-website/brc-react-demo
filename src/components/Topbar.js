@@ -13,7 +13,8 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import colorConfigs from "../configs/colorConfigs";
 import { Link } from 'react-router-dom';
 import { Button } from '@mui/material';
-import { Add } from '@mui/icons-material';
+import { AccountBox, Add, FavoriteBorder, Login, Logout } from '@mui/icons-material';
+import Cookies from 'js-cookie';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -67,6 +68,11 @@ const Topbar = () => {
     setAnchorEl(null);
   };
 
+  const handleLogOut = () => {
+    Cookies.remove("art_space_signing_jwt_token");
+    setAnchorEl(null);
+  };
+
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
@@ -84,9 +90,9 @@ const Topbar = () => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose} component={Link} to='/profile'>Your Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose} component={Link} to='/liked'>Liked Images</MenuItem>
-      <MenuItem onClick={handleMenuClose} component={Link} to='/liked'>Log out</MenuItem>
+      <MenuItem onClick={handleMenuClose} component={Link} to='/profile'><AccountBox /> Your Profile</MenuItem>
+      <MenuItem onClick={handleMenuClose} component={Link} to='/liked'><FavoriteBorder /> Liked Images</MenuItem>
+      <MenuItem onClick={handleLogOut} component={Link} to='/'><Logout /> Log out</MenuItem>
     </Menu>
   );
 
@@ -113,29 +119,48 @@ const Topbar = () => {
               style={{ width: '40vw' }}
             />
           </Search>
-          <Button 
-              startIcon={<Add />}
-              variant="text" 
-              color='inherit' 
-              size='large'
-              href='/upload'
-            >
-            Upload Image
-          </Button>
-          <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton
-              size="large"
-              edge="start"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-          </Box>
+          { Cookies.get("art_space_signing_jwt_token") ? (
+            <>
+              <Button 
+                  startIcon={<Add />}
+                  variant="text" 
+                  color='inherit' 
+                  size='large'
+                  href='/upload'
+                >
+                Upload Image
+              </Button>
+              <Box sx={{ flexGrow: 1 }} />
+              <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                <IconButton
+                  size="large"
+                  edge="start"
+                  aria-label="account of current user"
+                  aria-controls={menuId}
+                  aria-haspopup="true"
+                  onClick={handleProfileMenuOpen}
+                  color="inherit"
+                >
+                  <AccountCircle />
+                </IconButton>
+              </Box>
+            </>
+          ) : (
+            <>
+              <Box sx={{ flexGrow: 1 }} />
+              <Button 
+                    startIcon={<Login />}
+                    variant="text" 
+                    color='inherit' 
+                    size='large'
+                    href='/login'
+                    justifyContent='flex-end'
+                  >
+                  Sign In
+                </Button>
+            </>
+          )}
+          
         </Toolbar>
       </AppBar>
       {renderMenu}
