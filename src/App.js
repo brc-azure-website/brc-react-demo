@@ -6,6 +6,7 @@ import ProfilePage from './pages/ProfilePage';
 import LikedPage from './pages/LikedPage';
 import UploadPage from './pages/UploadPage';
 
+
 function App() {
   return (
     <BrowserRouter>

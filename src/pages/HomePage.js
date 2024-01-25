@@ -1,44 +1,67 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Topbar from "../components/Topbar";
 import colorConfigs from '../configs/colorConfigs';
-import InfiniteScroll from 'react-infinite-scroller';
-
-const loader = (
-  <div 
-    className="loader" 
-    key={0} 
-    style={{ margin: '10px' }}
-  >
-    Loading ...
-  </div>
-)
+import axios from 'axios';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { ImageList, ImageListItem } from '@mui/material';
 
 const HomePage = () => {
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
+  const [fetching, setFetching] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
 
-  const loadFunc = () => {
+  const loadFunc = async () => {
+    if (fetching || !hasMore) {
+      return;
+    }
+    setFetching(true);
 
-    setItems([...items, String(Math.random())]);
-    console.log(items.length)
+    try {
+      const imageUrl = await axios.get(`http://localhost:8080/api/v1/image/images-names-page/${page}`)
+        .then(value => value.data.map(imageName => `http://localhost:8080/api/v1/image/storage/${imageName}`))
+      
+      setItems([...items, ...imageUrl])
 
-    setPage(page+1)
+      if (imageUrl.length < 20) setHasMore(false);
+
+    } finally {
+      setPage(page+1)
+      setFetching(false);
+    }
   }
 
+  useEffect(() => {
+    loadFunc();
+  }, [])
+ 
   return (
     <div style={{ 
       backgroundColor: colorConfigs.green.lighter,
-      minHeight: '100vh'
+      minHeight: "100vh"
     }}>
       <Topbar />
       <InfiniteScroll
-        loadMore={loadFunc}
-        hasMore={true}
-        loader={loader}
+        dataLength={items.length}
+        next={loadFunc}
+        hasMore={hasMore}
       >
-        {items.map(item => {
-          return (<p> item</p>)
-        })}
+        <ImageList variant="masonry" 
+          cols={4} 
+          gap={16} 
+          sx={{ margin: 3 }}
+        >
+          {items.map(item => (
+            <ImageListItem key={item}>
+              <img
+                srcSet={`${item}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                src={`${item}?w=248&fit=crop&auto=format`}
+                loading="lazy"
+                style={{ borderRadius: 20}}
+              />
+            </ImageListItem>
+          ))}
+        </ImageList>
       </InfiniteScroll>
     </div>
   )
