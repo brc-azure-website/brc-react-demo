@@ -4,6 +4,7 @@ import colorConfigs from '../configs/colorConfigs';
 import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { ImageList, ImageListItem } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const HomePage = () => {
   const [items, setItems] = useState([]);
@@ -52,7 +53,7 @@ const HomePage = () => {
           sx={{ margin: 3 }}
         >
           {items.map(item => (
-            <ImageListItem key={item}>
+            <ImageListItem key={item} component={Link} to={`/image/${encodeURIComponent(item)}`}> 
               <img
                 srcSet={`${item}?w=248&fit=crop&auto=format&dpr=2 2x`}
                 src={`${item}?w=248&fit=crop&auto=format`}

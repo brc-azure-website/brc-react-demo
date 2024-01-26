@@ -5,6 +5,8 @@ import { AccountBox } from '@mui/icons-material';
 import { Avatar, Box, ImageList, ImageListItem, Typography } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const ProfilePage = () => {
   const [items, setItems] = useState([]);
@@ -19,7 +21,11 @@ const ProfilePage = () => {
     setFetching(true);
 
     try {
-      const imageUrl = await axios.get(`http://localhost:8080/api/v1/image/images-names-page/${page}`)
+      const imageUrl = await axios.get(`http://localhost:8080/api/v1/image/images-names-page/profil/${page}`, {
+        headers: {
+          Authorization: 'Bearer ' + Cookies.get('art_space_signing_jwt_token')
+        }
+      })
         .then(value => value.data.map(imageName => `http://localhost:8080/api/v1/image/storage/${imageName}`))
 
       setItems([...items, ...imageUrl])
@@ -68,7 +74,7 @@ const ProfilePage = () => {
           sx={{ margin: 3 }}
         >
           {items.map(item => (
-            <ImageListItem key={item}>
+            <ImageListItem key={item} component={Link} to={`/image/${encodeURIComponent(item)}`}>
               <img
                 srcSet={`${item}?w=248&fit=crop&auto=format&dpr=2 2x`}
                 src={`${item}?w=248&fit=crop&auto=format`}

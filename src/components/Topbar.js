@@ -11,7 +11,7 @@ import Menu from '@mui/material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import colorConfigs from "../configs/colorConfigs";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
 import { AccountBox, Add, FavoriteBorder, Login, Logout } from '@mui/icons-material';
 import Cookies from 'js-cookie';
@@ -57,6 +57,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const Topbar = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [searchValue, setSearchValue] = React.useState('');
+  const navigate = useNavigate();
 
   const isMenuOpen = Boolean(anchorEl);
 
@@ -72,6 +74,17 @@ const Topbar = () => {
     Cookies.remove("art_space_signing_jwt_token");
     setAnchorEl(null);
   };
+
+  const onEnterPress = (event) => {
+    if (event.key === 'Enter') {
+      if (searchValue.trim() === '') {
+        navigate('/');
+      } else {
+        navigate(`/search/${encodeURIComponent(searchValue)}`);
+        navigate(0);
+      }
+    }
+  }
 
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
@@ -109,7 +122,10 @@ const Topbar = () => {
           >
             ART_Space
           </Typography>
-          <Search>
+          <Search 
+            onChange={(event) => setSearchValue(event.target.value)}
+            onKeyDown={onEnterPress}
+          >
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
@@ -160,7 +176,6 @@ const Topbar = () => {
                 </Button>
             </>
           )}
-          
         </Toolbar>
       </AppBar>
       {renderMenu}

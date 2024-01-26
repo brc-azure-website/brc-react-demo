@@ -5,6 +5,8 @@ import SignUp from './pages/SignUpPage';
 import ProfilePage from './pages/ProfilePage';
 import LikedPage from './pages/LikedPage';
 import UploadPage from './pages/UploadPage';
+import ImagePage from './pages/ImagePage';
+import SearchPage from './pages/SearchPage';
 
 
 function App() {
@@ -17,6 +19,8 @@ function App() {
         <Route path='/profile' element={<ProfilePage />} />
         <Route path='/liked' element={<LikedPage />} />
         <Route path='/upload' element={<UploadPage />} />
+        <Route path='/image/:imageUrl' element={<ImagePage />} />
+        <Route path='/search/:title' element={<SearchPage />} />
       </Routes>
     </BrowserRouter>
   );

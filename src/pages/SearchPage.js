@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import Topbar from "../components/Topbar";
 import colorConfigs from '../configs/colorConfigs';
-import { Avatar, Box, ImageList, ImageListItem, Typography } from '@mui/material';
-import { FavoriteBorder } from '@mui/icons-material';
+import { ImageList, ImageListItem } from '@mui/material';
 import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { Link } from 'react-router-dom';
-import Cookies from 'js-cookie';
+import { Link, useParams } from 'react-router-dom';
 
-const LikedPage = () => {
+const SearchPage = () => {
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
   const [fetching, setFetching] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+
+  const { title } = useParams();
+  const decodedTitle = decodeURIComponent(title);
 
   const loadFunc = async () => {
     if (fetching || !hasMore) {
@@ -21,11 +22,7 @@ const LikedPage = () => {
     setFetching(true);
 
     try {
-      const imageUrl = await axios.get(`http://localhost:8080/api/v1/image/images-names-page/liked/${page}`, {
-        headers: {
-          Authorization: 'Bearer ' + Cookies.get('art_space_signing_jwt_token')
-        }
-      })
+      const imageUrl = await axios.get(`http://localhost:8080/api/v1/image/images-names-page/search/${page}/${decodedTitle}`)
         .then(value => value.data.map(imageName => `http://localhost:8080/api/v1/image/storage/${imageName}`))
 
       setItems([...items, ...imageUrl])
@@ -48,21 +45,6 @@ const LikedPage = () => {
       minHeight: '100vh'
     }}>
       <Topbar />
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Avatar sx={{ m: 1, bgcolor: '#2e7d32' }}>
-          <FavoriteBorder />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Your favourite art
-        </Typography>
-      </Box>
       <InfiniteScroll
         dataLength={items.length}
         next={loadFunc}
@@ -89,4 +71,4 @@ const LikedPage = () => {
   )
 }
 
-export default LikedPage
+export default SearchPage
