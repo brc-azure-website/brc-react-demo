@@ -170,7 +170,6 @@ const Topbar = () => {
                     color='inherit' 
                     size='large'
                     href='/login'
-                    justifyContent='flex-end'
                   >
                   Sign In
                 </Button>

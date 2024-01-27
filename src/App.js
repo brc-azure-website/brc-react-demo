@@ -7,6 +7,7 @@ import LikedPage from './pages/LikedPage';
 import UploadPage from './pages/UploadPage';
 import ImagePage from './pages/ImagePage';
 import SearchPage from './pages/SearchPage';
+import UserProfilePage from './pages/UserProfile';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path='/upload' element={<UploadPage />} />
         <Route path='/image/:imageUrl' element={<ImagePage />} />
         <Route path='/search/:title' element={<SearchPage />} />
+        <Route path='/user/:user' element={<UserProfilePage />} />
       </Routes>
     </BrowserRouter>
   );

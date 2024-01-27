@@ -2,44 +2,64 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import colorConfigs from "../configs/colorConfigs";
 import Topbar from '../components/Topbar';
-import { useParams } from 'react-router-dom';
-import { styled } from '@mui/material/styles';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
-import Collapse from '@mui/material/Collapse';
-import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-
-const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-  marginLeft: 'auto',
-  transition: theme.transitions.create('transform', {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
+import axios from 'axios';
+import { Avatar } from '@mui/material';
+import Cookies from 'js-cookie';
+import { Delete } from '@mui/icons-material';
 
 const ImagePage = () => {
   const { imageUrl } = useParams();
   const decodedImageUrl = decodeURIComponent(imageUrl.trim());
+  const navigate = useNavigate();
 
-  const [expanded, setExpanded] = React.useState(false);
+  const [imageDetails, setImageDetails] = React.useState(null);
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
+  const getImage = async () => {
+    let headers = {};
+    if (Cookies.get('art_space_signing_jwt_token')) {
+      headers = {Authorization: 'Bearer ' + Cookies.get('art_space_signing_jwt_token')};
+    }
+    await axios.get(`http://localhost:8080/api/v1/image/image-get-details/${decodedImageUrl.split('/').slice(-1)[0]}`,
+      { headers })
+      .then(value => setImageDetails(value.data))
+  }
 
+  const deleteImage = async () => {
+    if (!Cookies.get('art_space_signing_jwt_token')) return;
+
+    await axios.delete(`http://localhost:8080/api/v1/image/delete/${decodedImageUrl.split('/').slice(-1)[0]}`,
+        { 
+          headers: {Authorization: 'Bearer ' + Cookies.get('art_space_signing_jwt_token')} 
+        }
+      )
+    navigate('/profile')
+  }
+
+  const likeImage = async () => {
+    if (!Cookies.get('art_space_signing_jwt_token')) return;
+
+    await axios.post(`http://localhost:8080/api/v1/like/like-image`, {},
+        { 
+          params: {imageName: decodedImageUrl.split('/').slice(-1)[0]},
+          headers: {Authorization: 'Bearer ' + Cookies.get('art_space_signing_jwt_token')} 
+        }
+      ).then(value => value.data)
+
+    getImage();
+  }
+
+  React.useEffect(() => {
+    getImage()
+  }, [])
 
   return (
     <div style={{ 
@@ -55,10 +75,13 @@ const ImagePage = () => {
           alignItems: 'center',
         }}
       >
-        <Card sx={{ maxWidth: '60vw' }}>
+        <Card sx={{ maxWidth: '60vw', marginBottom: 8 }} style={{ backgroundColor: colorConfigs.green.main }}>
           <CardHeader
-            title="Shrimp and Chorizo Paella"
-            subheader="September 14, 2016"
+            avatar={
+              <Avatar sx={{ bgcolor: colorConfigs.green.dark }} aria-label="details" component={Link} to={`/user/${encodeURIComponent(imageDetails?.username)}`}/>
+            }
+            title={imageDetails?.title}
+            subheader={imageDetails?.dateTime ? new Date(imageDetails?.dateTime).toISOString().substring(0 ,10) : ''}
           />
           <CardMedia
             component="img"
@@ -67,33 +90,26 @@ const ImagePage = () => {
           />
           <CardContent>
             <Typography variant="body2" color="text.secondary">
-              This impressive paella is a perfect party dish and a fun meal to cook
-              together with your guests. Add 1 cup of frozen peas along with the mussels,
-              if you like.
+              {imageDetails?.description}
             </Typography>
           </CardContent>
           <CardActions disableSpacing>
-            <IconButton aria-label="add to favorites">
-              <FavoriteIcon />
-            </IconButton>
-            <ExpandMore
-              expand={expanded}
-              onClick={handleExpandClick}
-              aria-expanded={expanded}
-              aria-label="show more"
+            <IconButton 
+              aria-label="add to favorites" 
+              onClick={likeImage}
+              color={imageDetails?.isLiked ? 'error' : 'default'}
             >
-              <ExpandMoreIcon />
-            </ExpandMore>
+              <FavoriteIcon /> {imageDetails?.sumLikes}
+            </IconButton>
+            { imageDetails?.canDelete ? (
+              <IconButton 
+                aria-label="delete image" 
+                onClick={deleteImage}
+              >
+                <Delete />
+              </IconButton>
+            ) : ''}
           </CardActions>
-          <Collapse in={expanded} timeout="auto" unmountOnExit>
-            <CardContent>
-              <Typography paragraph>Method:</Typography>
-              <Typography paragraph>
-                Heat 1/2 cup of the broth in a pot until simmering, add saffron and set
-                aside for 10 minutes.
-              </Typography>
-            </CardContent>
-          </Collapse>
         </Card>
       </Box>
     </div>

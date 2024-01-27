@@ -40,7 +40,6 @@ const SignIn = () => {
 
     await axios.post('http://localhost:8080/api/v1/auth/authenticate', payload)
       .then((value) => {
-        console.log(value.data.token)
         Cookies.set("art_space_signing_jwt_token", value.data.token, { expires: 1 });
         navigate("/");
       })

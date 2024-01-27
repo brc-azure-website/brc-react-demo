@@ -5,14 +5,17 @@ import { AccountBox } from '@mui/icons-material';
 import { Avatar, Box, ImageList, ImageListItem, Typography } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
-const ProfilePage = () => {
+const UserProfilePage = () => {
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
   const [fetching, setFetching] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+
+  const { user } = useParams();
+  const decodedUser = decodeURIComponent(user);
 
   const loadFunc = async () => {
     if (fetching || !hasMore) {
@@ -21,11 +24,7 @@ const ProfilePage = () => {
     setFetching(true);
 
     try {
-      const imageUrl = await axios.get(`http://localhost:8080/api/v1/image/images-names-page/profile/${page}`, {
-        headers: {
-          Authorization: 'Bearer ' + Cookies.get('art_space_signing_jwt_token')
-        }
-      })
+      const imageUrl = await axios.get(`http://localhost:8080/api/v1/image/images-names-page/user/${page}/${decodedUser}`)
         .then(value => value.data.map(imageName => `http://localhost:8080/api/v1/image/storage/${imageName}`))
 
       setItems([...items, ...imageUrl])
@@ -60,7 +59,7 @@ const ProfilePage = () => {
           <AccountBox />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Your work
+          Work of {decodedUser.split('@')[0]}
         </Typography>
       </Box>
       <InfiniteScroll
@@ -89,4 +88,4 @@ const ProfilePage = () => {
   )
 }
 
-export default ProfilePage
+export default UserProfilePage

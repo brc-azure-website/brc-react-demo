@@ -26,7 +26,6 @@ const UploadPage = () => {
       image: image,
     }
     
-    console.log(payload);
     await axios.post('http://localhost:8080/api/v1/image/create', payload, {
       headers: {
         Authorization: `Bearer ${Cookies.get("art_space_signing_jwt_token")}`,
