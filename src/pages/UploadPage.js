@@ -107,6 +107,7 @@ const UploadPage = () => {
               sx={{ mt: 3, mb: 2 }}
               color='success'
               endIcon={<Send />}
+              disabled='true'
             >
               Send
             </Button>
