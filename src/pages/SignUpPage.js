@@ -13,6 +13,7 @@ import colorConfigs from '../configs/colorConfigs';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import { register } from '../configs/azureConfig';
 
 function Copyright(props) {
   return (
@@ -43,7 +44,7 @@ const SignUp = () => {
       password: data.get('password1'),
     }
 
-    await axios.post('http://localhost:8080/api/v1/auth/register', payload)
+    await axios.post(register(), payload)
       .then((value) => {
         Cookies.set("art_space_signing_jwt_token", value.data.token, { expires: 1 });
         navigate("/");

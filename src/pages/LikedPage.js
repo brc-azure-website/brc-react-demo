@@ -7,6 +7,7 @@ import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import { imageSearchByLiked, imageStorage } from '../configs/azureConfig';
 
 const LikedPage = () => {
   const [items, setItems] = useState([]);
@@ -21,12 +22,12 @@ const LikedPage = () => {
     setFetching(true);
 
     try {
-      const imageUrl = await axios.get(`http://localhost:8080/api/v1/image/images-names-page/liked/${page}`, {
+      const imageUrl = await axios.get(imageSearchByLiked(page), {
         headers: {
           Authorization: 'Bearer ' + Cookies.get('art_space_signing_jwt_token')
         }
       })
-        .then(value => value.data.map(imageName => `http://localhost:8080/api/v1/image/storage/${imageName}`))
+        .then(value => value.data.map(imageName => imageStorage(imageName)))
 
       setItems([...items, ...imageUrl])
 

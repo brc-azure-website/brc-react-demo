@@ -13,6 +13,7 @@ import Topbar from '../components/Topbar';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import { authenticate } from '../configs/azureConfig';
 
 function Copyright(props) {
   return (
@@ -38,7 +39,7 @@ const SignIn = () => {
       password: data.get('password'),
     }
 
-    await axios.post('http://localhost:8080/api/v1/auth/authenticate', payload)
+    await axios.post(authenticate(), payload)
       .then((value) => {
         Cookies.set("art_space_signing_jwt_token", value.data.token, { expires: 1 });
         navigate("/");

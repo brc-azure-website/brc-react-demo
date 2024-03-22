@@ -28,7 +28,7 @@ const ImagePage = () => {
     if (Cookies.get('art_space_signing_jwt_token')) {
       headers = {Authorization: 'Bearer ' + Cookies.get('art_space_signing_jwt_token')};
     }
-    await axios.get(`http://localhost:8080/api/v1/image/image-get-details/${decodedImageUrl.split('/').slice(-1)[0]}`,
+    await axios.get(imageDetails(decodedImageUrl),
       { headers })
       .then(value => setImageDetails(value.data))
   }
@@ -36,7 +36,7 @@ const ImagePage = () => {
   const deleteImage = async () => {
     if (!Cookies.get('art_space_signing_jwt_token')) return;
 
-    await axios.delete(`http://localhost:8080/api/v1/image/delete/${decodedImageUrl.split('/').slice(-1)[0]}`,
+    await axios.delete(deleteImage(decodedImageUrl),
         { 
           headers: {Authorization: 'Bearer ' + Cookies.get('art_space_signing_jwt_token')} 
         }

@@ -5,6 +5,7 @@ import { ImageList, ImageListItem } from '@mui/material';
 import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { Link, useParams } from 'react-router-dom';
+import { imageSearchByTitle, imageStorage } from '../configs/azureConfig';
 
 const SearchPage = () => {
   const [items, setItems] = useState([]);
@@ -22,8 +23,8 @@ const SearchPage = () => {
     setFetching(true);
 
     try {
-      const imageUrl = await axios.get(`http://localhost:8080/api/v1/image/images-names-page/search/${page}/${decodedTitle}`)
-        .then(value => value.data.map(imageName => `http://localhost:8080/api/v1/image/storage/${imageName}`))
+      const imageUrl = await axios.get(imageSearchByTitle(page, decodedTitle))
+        .then(value => value.data.map(imageName => imageStorage(imageName)))
 
       setItems([...items, ...imageUrl])
 

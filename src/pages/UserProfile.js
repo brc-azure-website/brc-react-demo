@@ -6,7 +6,7 @@ import { Avatar, Box, ImageList, ImageListItem, Typography } from '@mui/material
 import InfiniteScroll from 'react-infinite-scroll-component';
 import axios from 'axios';
 import { Link, useParams } from 'react-router-dom';
-import Cookies from 'js-cookie';
+import { imageSearchByUser, imageStorage } from '../configs/azureConfig';
 
 const UserProfilePage = () => {
   const [items, setItems] = useState([]);
@@ -24,8 +24,8 @@ const UserProfilePage = () => {
     setFetching(true);
 
     try {
-      const imageUrl = await axios.get(`http://localhost:8080/api/v1/image/images-names-page/user/${page}/${decodedUser}`)
-        .then(value => value.data.map(imageName => `http://localhost:8080/api/v1/image/storage/${imageName}`))
+      const imageUrl = await axios.get(imageSearchByUser(page, decodedUser))
+        .then(value => value.data.map(imageName => imageStorage(imageName)))
 
       setItems([...items, ...imageUrl])
 

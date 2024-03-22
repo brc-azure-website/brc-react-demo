@@ -7,6 +7,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import { imageSearchByProfile, imageStorage } from '../configs/azureConfig';
 
 const ProfilePage = () => {
   const [items, setItems] = useState([]);
@@ -21,12 +22,12 @@ const ProfilePage = () => {
     setFetching(true);
 
     try {
-      const imageUrl = await axios.get(`http://localhost:8080/api/v1/image/images-names-page/profile/${page}`, {
+      const imageUrl = await axios.get(imageSearchByProfile(page), {
         headers: {
           Authorization: 'Bearer ' + Cookies.get('art_space_signing_jwt_token')
         }
       })
-        .then(value => value.data.map(imageName => `http://localhost:8080/api/v1/image/storage/${imageName}`))
+        .then(value => value.data.map(imageName => imageStorage(imageName)))
 
       setItems([...items, ...imageUrl])
 

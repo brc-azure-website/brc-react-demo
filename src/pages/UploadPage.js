@@ -11,6 +11,7 @@ import axios from 'axios';
 import { CloudUploadOutlined, Send, UploadFile } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import { imageUpload } from '../configs/azureConfig';
 
 const UploadPage = () => {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const UploadPage = () => {
       image: image,
     }
     
-    await axios.post('http://localhost:8080/api/v1/image/create', payload, {
+    await axios.post(imageUpload(), payload, {
       headers: {
         Authorization: `Bearer ${Cookies.get("art_space_signing_jwt_token")}`,
         "Content-Type": "multipart/form-data"
