@@ -11,7 +11,7 @@ import axios from 'axios';
 import { CloudUploadOutlined, Send, UploadFile } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { imageUpload } from '../configs/azureConfig';
+import { imageUpload, imageUploadBlob } from '../configs/azureConfig';
 
 const UploadPage = () => {
   const navigate = useNavigate();
@@ -26,8 +26,11 @@ const UploadPage = () => {
       description: data.get('description'),
       image: image,
     }
+    const payloadBlob = {
+      file: image,
+    }
     
-    await axios.post(imageUpload(), payload, {
+    await axios.post(imageUploadBlob(), payloadBlob, {
       headers: {
         Authorization: `Bearer ${Cookies.get("art_space_signing_jwt_token")}`,
         "Content-Type": "multipart/form-data"
@@ -108,7 +111,7 @@ const UploadPage = () => {
               sx={{ mt: 3, mb: 2 }}
               color='success'
               endIcon={<Send />}
-              disabled='true'
+              //disabled='true'
             >
               Send
             </Button>
