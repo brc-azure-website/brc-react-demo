@@ -18,7 +18,7 @@ import { Delete } from '@mui/icons-material';
 
 const ImagePage = () => {
   const { imageUrl } = useParams();
-  const decodedImageUrl = decodeURIComponent(imageUrl.trim());
+  const decodedImageId = decodeURIComponent(imageUrl.trim());
   const navigate = useNavigate();
 
   const [imageDetails, setImageDetails] = React.useState(null);
@@ -28,7 +28,7 @@ const ImagePage = () => {
     if (Cookies.get('art_space_signing_jwt_token')) {
       headers = {Authorization: 'Bearer ' + Cookies.get('art_space_signing_jwt_token')};
     }
-    await axios.get(imageDetails(decodedImageUrl),
+    await axios.get(imageDetails(decodedImageId),
       { headers })
       .then(value => setImageDetails(value.data))
   }
@@ -36,7 +36,7 @@ const ImagePage = () => {
   const deleteImage = async () => {
     if (!Cookies.get('art_space_signing_jwt_token')) return;
 
-    await axios.delete(deleteImage(decodedImageUrl),
+    await axios.delete(deleteImage(decodedImageId),
         { 
           headers: {Authorization: 'Bearer ' + Cookies.get('art_space_signing_jwt_token')} 
         }
@@ -49,7 +49,7 @@ const ImagePage = () => {
 
     await axios.post(`http://localhost:8080/api/v1/like/like-image`, {},
         { 
-          params: {imageName: decodedImageUrl.split('/').slice(-1)[0]},
+          params: {imageId: decodedImageId},
           headers: {Authorization: 'Bearer ' + Cookies.get('art_space_signing_jwt_token')} 
         }
       ).then(value => value.data)
@@ -85,7 +85,7 @@ const ImagePage = () => {
           />
           <CardMedia
             component="img"
-            src={decodedImageUrl}
+            src={imageDetails?.url}
             alt="Details image"
           />
           <CardContent>
