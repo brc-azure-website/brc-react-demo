@@ -27,7 +27,7 @@ const ProfilePage = () => {
           Authorization: 'Bearer ' + Cookies.get('art_space_signing_jwt_token')
         }
       })
-        .then(value => value.data.map(imageName => imageStorage(imageName)))
+        .then(value => value.data)
 
       setItems([...items, ...imageUrl])
 

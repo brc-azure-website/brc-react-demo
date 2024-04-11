@@ -5,7 +5,7 @@ import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { ImageList, ImageListItem } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { imageStorage } from '../configs/azureConfig';
+import { imageSearchAll } from '../configs/azureConfig';
 
 const HomePage = () => {
   const [items, setItems] = useState([]);
@@ -20,7 +20,7 @@ const HomePage = () => {
     setFetching(true);
 
     try {
-      const imageUrl = await axios.get(imageStorage())
+      const imageUrl = await axios.get(imageSearchAll(page))
         .then(value => value.data)
       
       setItems([...items, ...imageUrl])

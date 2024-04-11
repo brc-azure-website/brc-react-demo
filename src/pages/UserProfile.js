@@ -25,7 +25,7 @@ const UserProfilePage = () => {
 
     try {
       const imageUrl = await axios.get(imageSearchByUser(page, decodedUser))
-        .then(value => value.data.map(imageName => imageStorage(imageName)))
+        .then(value => value.data)
 
       setItems([...items, ...imageUrl])
 
