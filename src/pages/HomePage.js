@@ -21,7 +21,7 @@ const HomePage = () => {
 
     try {
       const imageUrl = await axios.get()
-        .then(value => value.data.map(imageName => imageStorage(imageName)))
+        .then(value => value.data)
       
       setItems([...items, ...imageUrl])
 
