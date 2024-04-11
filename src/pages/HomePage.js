@@ -54,7 +54,7 @@ const HomePage = () => {
           sx={{ margin: 3 }}
         >
           {items.map(item => (
-            <ImageListItem key={item.id} component={Link} to={`/image/${encodeURIComponent(id)}`}> 
+            <ImageListItem key={item.id} component={Link} to={`/image/${encodeURIComponent(item.id)}`}> 
               <img
                 srcSet={`${item.url}?w=248&fit=crop&auto=format&dpr=2 2x`}
                 src={`${item.url}?w=248&fit=crop&auto=format`}
