@@ -75,10 +75,10 @@ const LikedPage = () => {
           sx={{ margin: 3 }}
         >
           {items.map(item => (
-            <ImageListItem key={item} component={Link} to={`/image/${encodeURIComponent(item)}`}>
+            <ImageListItem key={item.id} component={Link} to={`/image/${encodeURIComponent(item.id)}`}> 
               <img
-                srcSet={`${item}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                src={`${item}?w=248&fit=crop&auto=format`}
+                srcSet={`${item.url}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                src={`${item.url}?w=248&fit=crop&auto=format`}
                 loading="lazy"
                 style={{ borderRadius: 20}}
               />
