@@ -6,7 +6,7 @@ export const imageSearchByUser = (page, decodedUser) => `${urlPrefix}/api/v1/ima
 export const imageSearchByProfile = (page) => `${urlPrefix}/api/v1/image/images-names-page/profile/${page}`;
 export const imageSearchByLiked = (page) => `${urlPrefix}/api/v1/image/images-names-page/liked/${page}`;
 export const imageSearchAll = (page) => `${urlPrefix}/api/v1/image/images-names-page/${page}`
-export const imageGetBulk = () => `${urlPrefix}/api/v1/image/storage/getAll`;
+export const imageStorage = () => `${urlPrefix}/api/v1/image/storage/getAll`;
 export const imageUpload = () => `${urlPrefix}/api/v1/image/create`;
 export const imageUploadBlob = () => `${urlPrefix}/api/v1/blob/upload`;
 export const deleteImage = (decodedImageUrl) => `${urlPrefix}/api/v1/image/delete/${decodedImageUrl.split('/').slice(-1)[0]}`;
