@@ -15,6 +15,7 @@ import axios from 'axios';
 import { Avatar } from '@mui/material';
 import Cookies from 'js-cookie';
 import { Delete } from '@mui/icons-material';
+import { deleteImageById, imageGetDetails, likeImageById } from '../configs/azureConfig';
 
 const ImagePage = () => {
   const { imageUrl } = useParams();
@@ -28,26 +29,27 @@ const ImagePage = () => {
     if (Cookies.get('art_space_signing_jwt_token')) {
       headers = {Authorization: 'Bearer ' + Cookies.get('art_space_signing_jwt_token')};
     }
-    await axios.get(imageDetails(decodedImageId),
+    await axios.get(imageGetDetails(decodedImageId),
       { headers })
       .then(value => setImageDetails(value.data))
   }
 
   const deleteImage = async () => {
     if (!Cookies.get('art_space_signing_jwt_token')) return;
-
-    await axios.delete(deleteImage(decodedImageId),
+    
+    await axios.delete(deleteImageById(decodedImageId),
         { 
           headers: {Authorization: 'Bearer ' + Cookies.get('art_space_signing_jwt_token')} 
         }
       )
-    navigate('/profile')
+
+    navigate('/profile');
   }
 
   const likeImage = async () => {
     if (!Cookies.get('art_space_signing_jwt_token')) return;
 
-    await axios.post(`http://localhost:8080/api/v1/like/like-image`, {},
+    await axios.post(likeImageById(), {},
         { 
           params: {imageId: decodedImageId},
           headers: {Authorization: 'Bearer ' + Cookies.get('art_space_signing_jwt_token')} 

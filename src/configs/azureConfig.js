@@ -8,5 +8,6 @@ export const imageSearchByLiked = (page) => `${urlPrefix}/api/v1/image/images-na
 export const imageSearchAll = (page) => `${urlPrefix}/api/v1/image/images-names-page/${page}`
 export const imageUpload = () => `${urlPrefix}/api/v1/image/create`;
 export const imageUploadBlob = () => `${urlPrefix}/api/v1/blob/upload`;
-export const deleteImage = (decodedImageUrl) => `${urlPrefix}/api/v1/image/delete/${decodedImageUrl.split('/').slice(-1)[0]}`;
-export const imageDetails = (decodedImageUrl) => `http://localhost:8080/api/v1/image/image-get-details/${decodedImageUrl.split('/').slice(-1)[0]}`;
+export const deleteImageById = (decodedImageId) => `${urlPrefix}/api/v1/image/delete/${decodedImageId}`;
+export const imageGetDetails = (decodedImageId) => `${urlPrefix}/api/v1/image/image-get-details/${decodedImageId}`;
+export const likeImageById = () => `${urlPrefix}/api/v1/like/like-image`;
